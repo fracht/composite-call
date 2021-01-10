@@ -1,0 +1,36 @@
+{
+    "name": "composite-call",
+    "version": "1.0.0",
+    "description": "",
+    "main": "dist/index.js",
+    "files": [
+        "dist/**/*"
+    ],
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "build": "tsc",
+        "start": "tsc --watch",
+        "lint": "eslint ."
+    },
+    "keywords": [],
+    "author": "Artiom Tretjakovas",
+    "license": "MIT",
+    "devDependencies": {
+        "@types/lodash": "^4.14.167",
+        "@types/node": "^14.14.20",
+        "@typescript-eslint/eslint-plugin": "^4.12.0",
+        "@typescript-eslint/parser": "^4.12.0",
+        "eslint": "^7.17.0",
+        "eslint-config-prettier": "^7.1.0",
+        "eslint-plugin-prettier": "^3.3.1",
+        "eslint-plugin-simple-import-sort": "^7.0.0",
+        "prettier": "^2.2.1",
+        "typescript": "^4.1.3"
+    },
+    "peerDependencies": {
+        "typescript": ">=2.4.1"
+    },
+    "dependencies": {
+        "lodash": "^4.17.20"
+    }
+}
