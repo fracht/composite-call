@@ -20,15 +20,6 @@ type PathMap<T> = {
         : InnerPath;
 };
 
-// T extends object
-//     ? T extends Array<unknown>
-//         ? PathArr<T> & InnerPath
-//         : {
-//               [K in keyof T]: PathMap<T[K]>;
-//           } &
-//               InnerPath
-//     : InnerPath;
-
 const capitalize = (name: string) =>
     name.charAt(0).toUpperCase() + name.slice(1);
 
