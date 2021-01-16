@@ -15,7 +15,6 @@ export default function transformer(
             libName,
             composeName,
         });
-        console.log(ts.createPrinter().printFile(transformedFile));
         return transformedFile;
     };
 }
@@ -110,14 +109,14 @@ const symbolToPathMapElement = (
     );
 };
 
-function unbox(typeNode: ts.TypeNode) {
+const unbox = (typeNode: ts.TypeNode) => {
     while (ts.isArrayTypeNode(typeNode)) {
-        typeNode = (typeNode as ts.ArrayTypeNode).elementType;
+        typeNode = typeNode.elementType;
     }
     return typeNode;
-}
+};
 
-function unpackPromise(type: ts.Type, typeChecker: ts.TypeChecker) {
+const unboxPromise = (type: ts.Type, typeChecker: ts.TypeChecker) => {
     if (type.getSymbol()?.getName() === 'Promise') {
         const unpackedType = typeChecker.getTypeArguments(
             type as ts.TypeReference
@@ -126,29 +125,25 @@ function unpackPromise(type: ts.Type, typeChecker: ts.TypeChecker) {
     }
 
     return type;
-}
+};
 
-const parametersToPathMap = (
-    parameters: readonly ts.Symbol[],
-    typeChecker: ts.TypeChecker,
-    factory: ts.NodeFactory
-): ts.ObjectLiteralExpression => {
-    return factory.createObjectLiteralExpression(
-        parameters.reduce<ts.ObjectLiteralElementLike[]>((acc, parameter) => {
-            acc.push(...symbolToPathMap(parameter, typeChecker, factory));
-            return acc;
-        }, [])
-    );
+const unboxPropertyDeclaration = (
+    node: ts.Node
+    // typeChecker: ts.TypeChecker
+) => {
+    if (ts.isPropertyAccessExpression(node) || ts.isPropertyAccessChain(node)) {
+        return node.name;
+    }
+
+    return node;
 };
 
 const parametersNameArray = (
-    parameters: readonly ts.Symbol[],
+    parameters: string[],
     factory: ts.NodeFactory
 ): ts.ArrayLiteralExpression => {
     return factory.createArrayLiteralExpression(
-        parameters.map((parameter) =>
-            factory.createStringLiteral(parameter.getName())
-        )
+        parameters.map((parameter) => factory.createStringLiteral(parameter))
     );
 };
 
@@ -157,7 +152,7 @@ const typeToPathMap = (
     typeChecker: ts.TypeChecker,
     factory: ts.NodeFactory
 ): ts.ObjectLiteralElementLike[] => {
-    type = unpackPromise(type, typeChecker);
+    type = unboxPromise(type, typeChecker);
 
     if (isTypeInterfaceOrArray(type, typeChecker)) {
         const parameters = typeChecker.getPropertiesOfType(type);
@@ -203,17 +198,53 @@ const symbolToPathMap = (
     return out;
 };
 
-// const typeToPathMap = (
-//     symbols
-//     typeChecker: ts.TypeChecker,
-// ): ts.ObjectLiteralExpression => {
+const getComposedFunctionData = (
+    fun: ts.Node,
+    typeChecker: ts.TypeChecker
+): [string[], ts.Type] | undefined => {
+    fun = unboxPropertyDeclaration(fun);
+    if (ts.isIdentifier(fun)) {
+        const declaration = typeChecker
+            .getSymbolAtLocation(fun)
+            ?.getDeclarations()?.[0];
 
-//     if(type.isClassOrInterface()) {
-//         const properties = typeChecker.getPropertiesOfType(type);
+        if (
+            declaration &&
+            (ts.isVariableDeclaration(declaration) ||
+                ts.isPropertyDeclaration(declaration)) &&
+            declaration.initializer &&
+            ts.isArrowFunction(declaration.initializer)
+        ) {
+            const initializer = declaration.initializer;
 
-//     }
+            if (initializer.type) {
+                return [
+                    initializer.parameters.map((param) => param.name.getText()),
+                    typeChecker.getTypeFromTypeNode(initializer.type),
+                ];
+            }
+        }
 
-// }
+        if (
+            declaration &&
+            (ts.isFunctionDeclaration(declaration) ||
+                ts.isMethodDeclaration(declaration))
+        ) {
+            const signature = typeChecker.getSignatureFromDeclaration(
+                declaration
+            );
+
+            if (signature) {
+                return [
+                    signature.parameters.map((param) => param.getName()),
+                    signature.getReturnType(),
+                ];
+            }
+        }
+    }
+
+    return undefined;
+};
 
 const visitNode = (
     node: ts.Node,
@@ -221,7 +252,10 @@ const visitNode = (
     context: ts.TransformationContext,
     { libName, composeName }: Identifiers
 ): ts.Node | undefined => {
+    if (!node) return node;
+
     const typeChecker = program.getTypeChecker();
+
     if (isComposeImportExpression(node)) {
         const importNode = context.factory.createVariableStatement(undefined, [
             context.factory.createVariableDeclaration(
@@ -231,7 +265,7 @@ const visitNode = (
                 context.factory.createCallExpression(
                     context.factory.createIdentifier('require'),
                     undefined,
-                    [context.factory.createStringLiteral('composite-call')]
+                    [context.factory.createStringLiteral('../dist')]
                 )
             ),
         ]);
@@ -245,53 +279,29 @@ const visitNode = (
 
     const [fun, ...otherArguments] = node.arguments;
 
-    if (ts.isIdentifier(fun)) {
-        const declaration = typeChecker
-            .getSymbolAtLocation(fun)
-            ?.getDeclarations()?.[0];
+    const composedFunctionData = getComposedFunctionData(fun, typeChecker);
 
-        if (declaration && ts.isFunctionDeclaration(declaration)) {
-            const signature = typeChecker.getSignatureFromDeclaration(
-                declaration
-            );
+    if (composedFunctionData) {
+        const [parameters, returnType] = composedFunctionData;
 
-            if (signature) {
-                return context.factory.createCallExpression(
-                    context.factory.createPropertyAccessExpression(
-                        libName,
-                        composeName
-                    ),
-                    undefined,
-                    [
-                        fun,
-                        parametersNameArray(
-                            signature.parameters,
-                            context.factory
-                        ),
-                        context.factory.createObjectLiteralExpression(
-                            typeToPathMap(
-                                signature.getReturnType(),
-                                typeChecker,
-                                context.factory
-                            )
-                        ),
-                        ...otherArguments,
-                    ]
-                );
-            }
-        }
+        return context.factory.createCallExpression(
+            context.factory.createPropertyAccessExpression(
+                libName,
+                composeName
+            ),
+            undefined,
+            [
+                fun,
+                parametersNameArray(parameters, context.factory),
+                context.factory.createObjectLiteralExpression(
+                    typeToPathMap(returnType, typeChecker, context.factory)
+                ),
+                ...otherArguments,
+            ]
+        );
     }
 
-    // const replacementFun = context.factory.createIdentifier('__lol__');
-
     return node;
-
-    // if (node && node.arguments[0] && ts.isFunctionTypeNode(node.arguments[0])) {
-    //     console.log('WORKS!!');
-    // }
-
-    // return context.factory.createCallExpression(replacementFun, undefined, [fun]);
-    // return context.factory.createArrayLiteralExpression([]);
 };
 
 function isComposeImportExpression(
@@ -301,6 +311,7 @@ function isComposeImportExpression(
         return false;
     }
     const module = (node.moduleSpecifier as ts.StringLiteral).text;
+
     try {
         return (
             indexJs ===
@@ -325,7 +336,9 @@ function isComposeCallExpression(
     if (!ts.isCallExpression(node)) {
         return false;
     }
+
     const declaration = typeChecker.getResolvedSignature(node)?.declaration;
+
     if (
         !declaration ||
         ts.isJSDocSignature(declaration) ||
@@ -333,6 +346,7 @@ function isComposeCallExpression(
     ) {
         return false;
     }
+
     try {
         return (
             require.resolve(declaration.getSourceFile().fileName) === indexTs
