@@ -7,7 +7,8 @@
         "dist/**/*"
     ],
     "scripts": {
-        "test:watch": "jest --watch",
+        "test:coverage": "npm run build && npm run test -- --silent --ci --coverage --coverageReporters=\"text\" --coverageReporters=\"text-summary\"",
+        "test:watch": "npm run test -- --watch",
         "test": "jest",
         "build": "tsc",
         "start": "tsc --watch",
