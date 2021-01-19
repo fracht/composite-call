@@ -44,4 +44,15 @@ describe('renameDecorator', () => {
             preExpr: [],
         });
     });
+    it('should throw an error', async () => {
+        expect(() => {
+            class DummyClass {
+                @(rename('I will throw!!!') as PropertyDecorator)
+                testFn = undefined;
+            }
+
+            const dummyInstance = new DummyClass();
+            dummyInstance.testFn = undefined;
+        }).toThrow();
+    });
 });
