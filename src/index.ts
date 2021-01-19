@@ -2,23 +2,11 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 import toPath from 'lodash/toPath';
 
-const GET_NAME_SYMBOL = Symbol();
+import { CompositeCall } from './CompositeCall';
+import { AnyFunction, PATH, PathMap } from './typings';
 
-type UnpackPromise<T> = T extends Promise<infer U> ? U : T;
-
-type InnerPath = {
-    [GET_NAME_SYMBOL]: () => string;
-};
-
-type PathArr<T extends Array<unknown>> = PathMap<T[0]> & InnerPath;
-
-type PathMap<T> = {
-    [K in keyof T]: T[K] extends object
-        ? T[K] extends Array<unknown>
-            ? PathArr<T[K]>
-            : PathMap<T> & InnerPath
-        : InnerPath;
-};
+export * from './renameFunction';
+export * from './renameDecorator';
 
 const capitalize = (name: string) =>
     name.charAt(0).toUpperCase() + name.slice(1);
@@ -55,9 +43,9 @@ export const callToJson = <T>(args: T, name: string) => {
     while (queue.length > 0) {
         const path = queue.shift()!;
         const arg = get(args, path);
-        if (arg && arg[GET_NAME_SYMBOL]) {
+        if (arg && arg[PATH]) {
             set(normalArgs, path, null);
-            preExpr.push(pathToExpr(arg[GET_NAME_SYMBOL](), path, name));
+            preExpr.push(pathToExpr(arg[PATH], path, name));
         } else {
             set(normalArgs, path, arg);
             if (typeof arg === 'object' && arg !== null) {
@@ -76,46 +64,6 @@ export const callToJson = <T>(args: T, name: string) => {
     });
 };
 
-export class CompositeCall<T extends (...args: any[]) => any> {
-    private sequence: string[] = [];
-
-    public constructor(
-        fun: T,
-        args: Parameters<T>,
-        private readonly outPathMap: PathMap<UnpackPromise<ReturnType<T>>>
-    ) {
-        this.sequence.push(callToJson(args, fun.name));
-    }
-
-    public then = (
-        onfulfilled: (
-            value: PathMap<UnpackPromise<ReturnType<T>>>
-        ) => CompositeCall<any>
-    ): CompositeCall<T> => {
-        const compositeCall = onfulfilled(this.outPathMap);
-        this.sequence.push(...compositeCall.getJson());
-        return this;
-    };
-
-    public getJson = (): string[] => {
-        return this.sequence;
-    };
-
-    public call = (): string => {
-        return JSON.stringify(
-            {
-                seq: this.sequence.map((value) => JSON.parse(value)),
-            },
-            null,
-            4
-        );
-    };
-}
-
-/**
- * compose(find_documents, id, hello, bye).then(() => compose())
- */
-
 export const recordToPathMap = <T>(
     record: Record<string, string>
 ): PathMap<T> => {
@@ -123,8 +71,8 @@ export const recordToPathMap = <T>(
 
     Object.keys(record).map((key) => {
         const path: (string | symbol)[] = toPath(key);
-        path.push(GET_NAME_SYMBOL);
-        set(pathMap, path, () => key);
+        path.push(PATH);
+        set(pathMap, path, key);
     });
 
     return pathMap as PathMap<T>;
@@ -136,12 +84,12 @@ const argsToMap = (args: unknown[], names: string[]) =>
         return map;
     }, {});
 
-export declare function compose<T extends (...args: any[]) => any>(
+export declare function compose<T extends AnyFunction>(
     fun: T,
     ...args: Parameters<T>
 ): CompositeCall<T>;
 
-export const __compose__ = <T extends (...args: any[]) => any>(
+export const __compose__ = <T extends AnyFunction>(
     fun: T,
     argNames: string[],
     retTypeMap: Record<string, string>,
