@@ -1,4 +1,4 @@
-import { AnyFunction } from './typings';
+import { AnyFunction } from '../typings';
 
 export const renameFunction = <T extends AnyFunction>(
     fun: T,

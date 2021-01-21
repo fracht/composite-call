@@ -2,11 +2,12 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 import toPath from 'lodash/toPath';
 
-import { CompositeCall } from './CompositeCall';
-import { AnyFunction, PATH, PathMap } from './typings';
+import { CompositeCall } from './call/CompositeCall';
+import { AnyFunction, PATH } from './typings';
 
-export * from './renameFunction';
-export * from './renameDecorator';
+export * from './utils/renameFunction';
+export * from './utils/renameDecorator';
+export * from './__compose';
 
 const capitalize = (name: string) =>
     name.charAt(0).toUpperCase() + name.slice(1);
@@ -64,40 +65,7 @@ export const callToJson = <T>(args: T, name: string) => {
     });
 };
 
-export const recordToPathMap = <T>(
-    record: Record<string, string>
-): PathMap<T> => {
-    const pathMap = {};
-
-    Object.keys(record).map((key) => {
-        const path: (string | symbol)[] = toPath(key);
-        path.push(PATH);
-        set(pathMap, path, key);
-    });
-
-    return pathMap as PathMap<T>;
-};
-
-const argsToMap = (args: unknown[], names: string[]) =>
-    args.reduce<Record<string, unknown>>((map, arg, index) => {
-        map[names[index]] = arg;
-        return map;
-    }, {});
-
 export declare function compose<T extends AnyFunction>(
     fun: T,
     ...args: Parameters<T>
 ): CompositeCall<T>;
-
-export const __compose__ = <T extends AnyFunction>(
-    fun: T,
-    argNames: string[],
-    retTypeMap: Record<string, string>,
-    ...args: Parameters<T>
-): CompositeCall<T> => {
-    return new CompositeCall(
-        fun,
-        (argsToMap(args, argNames) as unknown) as Parameters<T>,
-        recordToPathMap(retTypeMap)
-    );
-};
