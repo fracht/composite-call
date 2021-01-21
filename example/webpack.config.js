@@ -1,6 +1,5 @@
 const path = require('path');
-const compositeCallTransformer = require('composite-call/dist/transformer')
-    .default;
+const compositeCallTransformer = require('composite-call/dist/transformer');
 
 module.exports = {
     mode: 'development',

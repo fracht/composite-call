@@ -1,11 +1,14 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
+        "module": "CommonJS",
         "plugins": [
             {
                 "transform": "./dist/transformer.js",
                 "cacheBetweenTests": false
             }
         ]
-    }
+    },
+    "include": ["tests", "src"],
+    "exclude": ["node_modules", "example"]
 }

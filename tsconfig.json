@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es5",
-        "module": "commonjs",
+        "module": "ES2015",
         "declaration": true,
         "outDir": "./dist",
         "strict": true,
@@ -9,7 +9,8 @@
         "lib": ["ES2015"],
         "rootDir": "src",
         "skipLibCheck": true,
-        "experimentalDecorators": true
+        "experimentalDecorators": true,
+        "allowSyntheticDefaultImports": true
     },
     "include": ["src"],
     "exclude": ["node_modules", "tests", "example"]
