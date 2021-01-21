@@ -1,11 +1,8 @@
 import { renameFunction } from './renameFunction';
-import { AnyFunction } from './typings';
-
-const isAnyFunction = (fn: unknown): fn is AnyFunction =>
-    typeof fn === 'function';
+import { AnyFunction } from '../typings';
 
 export function rename(name?: string): MethodDecorator {
-    return <T>(
+    const decorator = <T extends AnyFunction>(
         target: Object,
         propertyKey: string | symbol,
         descriptor: TypedPropertyDescriptor<T>
@@ -15,15 +12,11 @@ export function rename(name?: string): MethodDecorator {
         const propertyKeyString = propertyKey.toString();
         const className = target.constructor.name;
 
-        if (!isAnyFunction(fn)) {
-            throw new Error(
-                `Cannot decorate "${propertyKeyString}" of class "${className}". It is should be of function type`
-            );
-        }
-
-        descriptor.value = renameFunction(
-            fn,
+        descriptor.value = renameFunction<T>(
+            fn!,
             name ?? `${className}.${propertyKeyString}`
         );
     };
+
+    return decorator as MethodDecorator;
 }

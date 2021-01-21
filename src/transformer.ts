@@ -4,13 +4,15 @@ import ts from 'typescript';
 const indexTs = path.join(__dirname, 'index.d.ts');
 const indexJs = path.join(__dirname, 'index.js');
 const declarationName = 'compose';
+const callFunctionName = '__compose';
+const modulePath = 'composite-call';
 
 export default function transformer(
     program: ts.Program
 ): ts.TransformerFactory<ts.SourceFile> {
     return (context: ts.TransformationContext) => (file: ts.SourceFile) => {
         const libName = context.factory.createUniqueName('compositeCall');
-        const composeName = context.factory.createIdentifier('__compose__');
+        const composeName = context.factory.createIdentifier(callFunctionName);
         const transformedFile = visitNodeAndChildren(file, program, context, {
             libName,
             composeName,
@@ -265,7 +267,7 @@ const visitNode = (
                 context.factory.createCallExpression(
                     context.factory.createIdentifier('require'),
                     undefined,
-                    [context.factory.createStringLiteral('../dist')]
+                    [context.factory.createStringLiteral(modulePath)]
                 )
             ),
         ]);
