@@ -1,6 +1,6 @@
-import { CompositeCall } from './call/CompositeCall';
 import { namedArrayToRecord } from './utils/namedArrayToRecord';
 import { recordToPathMap } from './utils/recordToPathMap';
+import { CompositeCall } from './CompositeCall';
 import type { AnyFunction } from './typings';
 
 export const __compose = <T extends AnyFunction>(
