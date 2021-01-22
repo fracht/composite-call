@@ -1,13 +1,16 @@
-import ts from 'typescript';
+import {
+    Program,
+    SourceFile,
+    TransformationContext,
+    TransformerFactory,
+} from 'typescript';
 
 import { config } from './config';
 import { visitNodeAndChildren } from './visitNodeAndChildren';
 import { visitor } from './visitor';
 
-export function transformer(
-    program: ts.Program
-): ts.TransformerFactory<ts.SourceFile> {
-    return (context: ts.TransformationContext) => (file: ts.SourceFile) => {
+export function transformer(program: Program): TransformerFactory<SourceFile> {
+    return (context: TransformationContext) => (file: SourceFile) => {
         const libName = context.factory.createUniqueName('compositeCall');
         const composeName = context.factory.createIdentifier(
             config.composeFunctionName

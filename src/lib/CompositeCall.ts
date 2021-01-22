@@ -1,5 +1,5 @@
-import { callToJson } from '../index';
-import { AnyFunction, PathMap, UnpackPromise } from '../typings';
+import { callToJson } from './index';
+import { AnyFunction, PathMap, UnpackPromise } from './typings';
 
 export class CompositeCall<T extends AnyFunction> {
     private sequence: string[] = [];
