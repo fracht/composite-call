@@ -1,21 +1,22 @@
 import { Node, Program, TransformationContext } from 'typescript';
 
 import type { TransformerConfig } from './config';
+import { createComposeCallExpression } from './createComposeCallExpression';
 import { getComposedFunctionData } from './getComposedFunctionData';
 import { isComposeCallExpression } from './isComposeCallExpression';
 import { isComposeImportExpression } from './isComposeImportExpression';
-import { parametersNameArray } from './parametersNameArray';
-import { typeToPathMap } from './typeToPathMap';
 import { Identifiers } from './typings';
 
 export const visitor = (
     node: Node,
     program: Program,
     context: TransformationContext,
-    { libName, composeName }: Identifiers,
+    identifiers: Identifiers,
     config: TransformerConfig
 ): Node | undefined => {
     if (!node) return node;
+
+    const { libName } = identifiers;
 
     const typeChecker = program.getTypeChecker();
 
@@ -45,22 +46,13 @@ export const visitor = (
     const composedFunctionData = getComposedFunctionData(fun, typeChecker);
 
     if (composedFunctionData) {
-        const [parameters, returnType] = composedFunctionData;
-
-        return context.factory.createCallExpression(
-            context.factory.createPropertyAccessExpression(
-                libName,
-                composeName
-            ),
-            undefined,
-            [
-                fun,
-                parametersNameArray(parameters, context.factory),
-                context.factory.createObjectLiteralExpression(
-                    typeToPathMap(returnType, typeChecker, context.factory)
-                ),
-                ...otherArguments,
-            ]
+        return createComposeCallExpression(
+            composedFunctionData,
+            identifiers,
+            fun,
+            otherArguments,
+            context,
+            typeChecker
         );
     }
 

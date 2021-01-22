@@ -1,4 +1,5 @@
 import {
+    createPrinter,
     Program,
     SourceFile,
     TransformationContext,
@@ -15,6 +16,9 @@ export function transformer(program: Program): TransformerFactory<SourceFile> {
         const composeName = context.factory.createIdentifier(
             config.composeFunctionName
         );
+        const pathSymbolName = context.factory.createIdentifier(
+            config.pathSymbolName
+        );
         const transformedFile = visitNodeAndChildren(
             file,
             program,
@@ -22,6 +26,7 @@ export function transformer(program: Program): TransformerFactory<SourceFile> {
             {
                 libName,
                 composeName,
+                pathSymbolName,
             },
             visitor,
             config

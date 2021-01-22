@@ -1,6 +1,7 @@
 import {
     isArrayTypeNode,
     isPropertyDeclaration,
+    isPropertySignature,
     Symbol,
     TypeChecker,
 } from 'typescript';
@@ -16,7 +17,8 @@ export const isInterfaceOrArray = (
 
     if (
         propertyDeclaration &&
-        isPropertyDeclaration(propertyDeclaration) &&
+        (isPropertySignature(propertyDeclaration) ||
+            isPropertyDeclaration(propertyDeclaration)) &&
         propertyDeclaration.type
     ) {
         const propertyType = unboxArray(propertyDeclaration.type);
@@ -29,5 +31,6 @@ export const isInterfaceOrArray = (
             isTypeObject(type, typeChecker)
         );
     }
+
     return false;
 };
