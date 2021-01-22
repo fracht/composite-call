@@ -7,6 +7,7 @@ import { PATH } from './typings';
 export * from './utils/renameFunction';
 export * from './utils/renameDecorator';
 export * from './__compose';
+export { PATH } from './typings';
 
 const capitalize = (name: string) =>
     name.charAt(0).toUpperCase() + name.slice(1);

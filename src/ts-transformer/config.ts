@@ -5,6 +5,7 @@ export type TransformerConfig = {
     composeFunctionPath: string;
     declarationName: string;
     composeFunctionName: string;
+    pathSymbolName: string;
     modulePath: string;
 };
 
@@ -14,4 +15,5 @@ export const config: TransformerConfig = {
     declarationName: 'compose',
     composeFunctionName: '__compose',
     modulePath: 'composite-call',
+    pathSymbolName: 'PATH',
 };

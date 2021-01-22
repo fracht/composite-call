@@ -1,17 +1,14 @@
-import { namedArrayToRecord } from './utils/namedArrayToRecord';
-import { recordToPathMap } from './utils/recordToPathMap';
 import { CompositeCall } from './CompositeCall';
-import type { AnyFunction } from './typings';
+import type { AnyFunction, PathMap, UnpackPromise } from './typings';
 
 export const __compose = <T extends AnyFunction>(
     fun: T,
-    argNames: string[],
-    retTypeMap: Record<string, string>,
-    ...args: Parameters<T>
+    args: Record<string, unknown>,
+    outPathType: PathMap<UnpackPromise<ReturnType<T>>>
 ): CompositeCall<T> => {
     return new CompositeCall(
         fun,
-        (namedArrayToRecord(args, argNames) as unknown) as Parameters<T>,
-        recordToPathMap(retTypeMap)
+        (args as unknown) as Parameters<T>,
+        outPathType
     );
 };

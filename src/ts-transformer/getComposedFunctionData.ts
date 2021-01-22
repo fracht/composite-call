@@ -12,10 +12,12 @@ import {
 
 import { unboxPropertyDeclaration } from './unboxPropertyDeclaration';
 
+export type ComposedFunctionData = [string[], Type];
+
 export const getComposedFunctionData = (
     fun: Node,
     typeChecker: TypeChecker
-): [string[], Type] | undefined => {
+): ComposedFunctionData | undefined => {
     fun = unboxPropertyDeclaration(fun);
     if (isIdentifier(fun)) {
         const declaration = typeChecker
