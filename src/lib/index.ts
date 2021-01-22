@@ -2,8 +2,7 @@ import get from 'lodash/get';
 import set from 'lodash/set';
 import toPath from 'lodash/toPath';
 
-import { CompositeCall } from './CompositeCall';
-import { AnyFunction, PATH } from './typings';
+import { PATH } from './typings';
 
 export * from './utils/renameFunction';
 export * from './utils/renameDecorator';
@@ -64,8 +63,3 @@ export const callToJson = <T>(args: T, name: string) => {
         preExpr,
     });
 };
-
-export declare function compose<T extends AnyFunction>(
-    fun: T,
-    ...args: Parameters<T>
-): CompositeCall<T>;
