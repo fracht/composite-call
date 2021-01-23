@@ -1,5 +1,5 @@
-import { compose } from '../dist';
-import { rename } from '../src';
+import { compose } from '../../dist';
+import { rename } from '../../src/utils';
 
 describe('renameDecorator', () => {
     it('should rename class method', async () => {
@@ -14,13 +14,12 @@ describe('renameDecorator', () => {
 
         const composed = compose(dummyInstance.testFn, 'hello', 'world');
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: 'DummyClass.testFn',
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
     it('should rename class method with custom specified name', async () => {
@@ -35,13 +34,12 @@ describe('renameDecorator', () => {
 
         const composed = compose(dummyInstance.testFn, 'hello', 'world');
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: "I'm custom name!!!",
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
     it('should throw an error', async () => {

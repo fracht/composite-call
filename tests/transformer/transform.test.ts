@@ -1,4 +1,5 @@
-import { compose } from '../dist';
+import { compose } from '../../dist';
+import { PATH } from '../../src';
 
 describe('compose transformation', () => {
     it('should compose function', async () => {
@@ -18,13 +19,12 @@ describe('compose transformation', () => {
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: 'testFn',
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 
@@ -45,13 +45,12 @@ describe('compose transformation', () => {
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: 'testFn',
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 
@@ -76,13 +75,12 @@ describe('compose transformation', () => {
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: '', // impossible to get name automatically
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 
@@ -107,13 +105,12 @@ describe('compose transformation', () => {
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: '', // impossible to get name automatically
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 });
@@ -153,16 +150,16 @@ describe('complex transformations', () => {
 
         composed.then(fn);
 
-        expect(JSON.parse(composed.getJson()[1])).toStrictEqual({
+        expect(composed.getSequence()[1]).toStrictEqual({
             name: 'testFn',
-            args: {
-                a: null,
-                b: null,
+            parameters: {
+                a: {
+                    [PATH]: 'testFn.c.arr.b.c',
+                },
+                b: {
+                    [PATH]: 'testFn.e.f',
+                },
             },
-            preExpr: [
-                'args.setA(testFn.getC().getArr().getB().getC())',
-                'args.setB(testFn.getE().getF())',
-            ],
         });
     });
     it('should compose arrow function (using interfaces)', () => {
@@ -218,16 +215,16 @@ describe('complex transformations', () => {
 
         composed.then(fn);
 
-        expect(JSON.parse(composed.getJson()[1])).toStrictEqual({
+        expect(composed.getSequence()[1]).toStrictEqual({
             name: 'testFn',
-            args: {
-                a: null,
-                b: null,
+            parameters: {
+                a: {
+                    [PATH]: 'testFn.c.arr.b.c',
+                },
+                b: {
+                    [PATH]: 'testFn.e.f',
+                },
             },
-            preExpr: [
-                'args.setA(testFn.getC().getArr().getB().getC())',
-                'args.setB(testFn.getE().getF())',
-            ],
         });
     });
 });

@@ -1,5 +1,5 @@
-import { compose } from '../dist';
-import { renameFunction } from '../src';
+import { compose } from '../../dist';
+import { renameFunction } from '../../src/utils';
 
 describe('renameFunction', () => {
     it('should rename standard function', async () => {
@@ -13,13 +13,12 @@ describe('renameFunction', () => {
 
         const composed = compose(testFn, 'hello', 'world');
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 
@@ -34,13 +33,12 @@ describe('renameFunction', () => {
 
         const composed = compose(testFn, 'hello', 'world');
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 
@@ -59,13 +57,12 @@ describe('renameFunction', () => {
 
         const composed = compose(dummyInstance.testFn, 'hello', 'world');
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 
@@ -84,13 +81,12 @@ describe('renameFunction', () => {
 
         const composed = compose(dummyInstance.testFn, 'hello', 'world');
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
-            args: {
+            parameters: {
                 a: 'hello',
                 b: 'world',
             },
-            preExpr: [],
         });
     });
 });

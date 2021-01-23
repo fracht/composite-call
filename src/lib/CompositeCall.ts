@@ -1,38 +1,48 @@
-import { callToJson } from './index';
-import { AnyFunction, PathMap, UnpackPromise } from './typings';
+import { prefixAllValues } from './prefixAllValues';
+import type {
+    AnyFunction,
+    CallInfo,
+    CompositeCallSender,
+    PathMap,
+    TupleToRecord,
+    UnpackPromise,
+} from './typings';
 
-export class CompositeCall<T extends AnyFunction> {
-    private sequence: string[] = [];
+export class CompositeCall<
+    T extends AnyFunction,
+    S extends Array<AnyFunction> = [T]
+> {
+    static sendRequest: CompositeCallSender;
+
+    private sequence: Array<CallInfo<AnyFunction>> = [];
 
     public constructor(
-        fun: T,
-        args: Parameters<T>,
+        private readonly fun: T,
+        parameters: TupleToRecord<Parameters<T>>,
         private readonly outPathMap: PathMap<UnpackPromise<ReturnType<T>>>
     ) {
-        this.sequence.push(callToJson(args, fun.name));
+        this.sequence.push({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            parameters: prefixAllValues(parameters, fun.name) as any,
+            name: fun.name,
+        });
     }
 
-    public then = (
+    public then = <K extends Array<AnyFunction>>(
         onfulfilled: (
             value: PathMap<UnpackPromise<ReturnType<T>>>
-        ) => CompositeCall<any>
-    ): CompositeCall<T> => {
+        ) => CompositeCall<AnyFunction, K>
+    ): CompositeCall<T, [...S, ...K]> => {
         const compositeCall = onfulfilled(this.outPathMap);
-        this.sequence.push(...compositeCall.getJson());
-        return this;
+        this.sequence.push(...compositeCall.getSequence());
+        return (this as unknown) as CompositeCall<T, [...S, ...K]>;
     };
 
-    public getJson = (): string[] => {
+    public getSequence = (): Array<CallInfo<AnyFunction>> => {
         return this.sequence;
     };
 
-    public call = (): string => {
-        return JSON.stringify(
-            {
-                seq: this.sequence.map((value) => JSON.parse(value)),
-            },
-            null,
-            4
-        );
+    public call = (sendRequest = CompositeCall.sendRequest) => {
+        return sendRequest<S>(this.sequence, this.fun);
     };
 }
