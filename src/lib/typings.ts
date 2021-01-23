@@ -9,6 +9,17 @@ export type InnerPath = {
     [PATH]: string;
 };
 
+export type CompositeCallSender = <T extends Array<AnyFunction>>(
+    sequence: T
+) => Promise<
+    [...{ [K in keyof T]: T[K] extends AnyFunction ? ReturnType<T[K]> : never }]
+>;
+
+export type CallInfo<T extends AnyFunction> = {
+    name: string;
+    arguments: Parameters<T>;
+};
+
 export type PathArr<T extends Array<unknown>> = PathMap<T[0]> & InnerPath;
 
 export type PathMap<T> = {

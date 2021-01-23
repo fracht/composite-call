@@ -12,13 +12,11 @@ describe('compose transformation', () => {
 
         const composed = compose(testFn, 'hello', 'world');
 
-        composed.then(fn);
-
         expect(fn).toBeCalledWith({
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: 'testFn',
             args: {
                 a: 'hello',
@@ -45,7 +43,7 @@ describe('compose transformation', () => {
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: 'testFn',
             args: {
                 a: 'hello',
@@ -76,7 +74,7 @@ describe('compose transformation', () => {
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: '', // impossible to get name automatically
             args: {
                 a: 'hello',
@@ -107,7 +105,7 @@ describe('compose transformation', () => {
             c: expect.anything(),
         });
 
-        expect(JSON.parse(composed.getJson()[0])).toStrictEqual({
+        expect(composed.getSequence()[0]).toStrictEqual({
             name: '', // impossible to get name automatically
             args: {
                 a: 'hello',
@@ -153,7 +151,7 @@ describe('complex transformations', () => {
 
         composed.then(fn);
 
-        expect(JSON.parse(composed.getJson()[1])).toStrictEqual({
+        expect(composed.getSequence()[1]).toStrictEqual({
             name: 'testFn',
             args: {
                 a: null,
@@ -218,7 +216,7 @@ describe('complex transformations', () => {
 
         composed.then(fn);
 
-        expect(JSON.parse(composed.getJson()[1])).toStrictEqual({
+        expect(composed.getSequence()[1]).toStrictEqual({
             name: 'testFn',
             args: {
                 a: null,
