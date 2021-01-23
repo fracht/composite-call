@@ -1,5 +1,5 @@
 import { renameFunction } from './renameFunction';
-import { AnyFunction } from '../typings';
+import { AnyFunction } from './typings';
 
 export function rename(name?: string): MethodDecorator {
     const decorator = <T extends AnyFunction>(

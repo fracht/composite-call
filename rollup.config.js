@@ -8,10 +8,12 @@ const createConfig = (input, exports) => ({
         format: 'cjs',
         exports,
     },
+    external: ['typescript', 'lodash/get', 'path'],
     plugins: [typescript({})],
 });
 
 export default [
     createConfig('src/index.ts', 'named'),
+    createConfig('src/utils.ts', 'named'),
     createConfig('src/transformer.ts', 'default'),
 ];

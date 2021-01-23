@@ -1,8 +1,10 @@
+import { prefixAllValues } from './prefixAllValues';
 import type {
     AnyFunction,
     CallInfo,
     CompositeCallSender,
     PathMap,
+    TupleToRecord,
     UnpackPromise,
 } from './typings';
 
@@ -15,11 +17,15 @@ export class CompositeCall<
     private sequence: Array<CallInfo<AnyFunction>> = [];
 
     public constructor(
-        fun: T,
-        args: Parameters<T>,
+        private readonly fun: T,
+        parameters: TupleToRecord<Parameters<T>>,
         private readonly outPathMap: PathMap<UnpackPromise<ReturnType<T>>>
     ) {
-        this.sequence.push({ arguments: args, name: fun.name });
+        this.sequence.push({
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            parameters: prefixAllValues(parameters, fun.name) as any,
+            name: fun.name,
+        });
     }
 
     public then = <K extends Array<AnyFunction>>(
@@ -37,6 +43,6 @@ export class CompositeCall<
     };
 
     public call = (sendRequest = CompositeCall.sendRequest) => {
-        return sendRequest<S>((this.sequence as unknown) as S);
+        return sendRequest<S>(this.sequence, this.fun);
     };
 }

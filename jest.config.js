@@ -16,6 +16,6 @@ module.exports = {
     coveragePathIgnorePatterns: ['/node_modules/'],
     watchman: true,
     moduleNameMapper: {
-        'composite-call': '../dist/index.js',
+        'composite-call': '../../dist/index.js',
     },
 };
