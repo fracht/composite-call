@@ -10,7 +10,7 @@ export class CompositeCall<
     T extends AnyFunction,
     S extends Array<AnyFunction> = [T]
 > {
-    static requestSender: CompositeCallSender;
+    static sendRequest: CompositeCallSender;
 
     private sequence: Array<CallInfo<AnyFunction>> = [];
 
@@ -36,7 +36,7 @@ export class CompositeCall<
         return this.sequence;
     };
 
-    public call = (requestSender = CompositeCall.requestSender) => {
-        return requestSender<S>((this.sequence as unknown) as S);
+    public call = (sendRequest = CompositeCall.sendRequest) => {
+        return sendRequest<S>((this.sequence as unknown) as S);
     };
 }
