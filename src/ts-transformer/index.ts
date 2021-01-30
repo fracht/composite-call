@@ -19,6 +19,9 @@ export function transformer(program: Program): TransformerFactory<SourceFile> {
         const pathSymbolName = context.factory.createIdentifier(
             config.pathSymbolName
         );
+        const arrayItemSymbolName = context.factory.createIdentifier(
+            config.arrayItemSymbolName
+        );
         const transformedFile = visitNodeAndChildren(
             file,
             program,
@@ -27,10 +30,12 @@ export function transformer(program: Program): TransformerFactory<SourceFile> {
                 libName,
                 composeName,
                 pathSymbolName,
+                arrayItemSymbolName,
             },
             visitor,
             config
         );
+        console.log(createPrinter().printFile(transformedFile));
         return transformedFile;
     };
 }

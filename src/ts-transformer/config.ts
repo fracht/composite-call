@@ -7,6 +7,8 @@ export type TransformerConfig = {
     composeFunctionName: string;
     pathSymbolName: string;
     modulePath: string;
+    arrayItemSymbolName: string;
+    arrayItemIndexPath: string;
 };
 
 export const config: TransformerConfig = {
@@ -16,4 +18,6 @@ export const config: TransformerConfig = {
     composeFunctionName: '__compose',
     modulePath: 'composite-call',
     pathSymbolName: 'PATH',
+    arrayItemSymbolName: 'ARRAY_ITEM',
+    arrayItemIndexPath: '[__compositeCallArrayIndex]',
 };
