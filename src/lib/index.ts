@@ -1,2 +1,2 @@
 export * from './__compose';
-export { PATH } from './typings';
+export { PATH, ARRAY_ITEM } from './typings';

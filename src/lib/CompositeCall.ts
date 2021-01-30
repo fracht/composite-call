@@ -3,6 +3,7 @@ import type {
     AnyFunction,
     CallInfo,
     CompositeCallSender,
+    NormalTypeToStrictPathType,
     PathMap,
     TupleToRecord,
     UnpackPromise,
@@ -30,10 +31,14 @@ export class CompositeCall<
 
     public then = <K extends Array<AnyFunction>>(
         onfulfilled: (
-            value: PathMap<UnpackPromise<ReturnType<T>>>
+            value: NormalTypeToStrictPathType<UnpackPromise<ReturnType<T>>>
         ) => CompositeCall<AnyFunction, K>
     ): CompositeCall<T, [...S, ...K]> => {
-        const compositeCall = onfulfilled(this.outPathMap);
+        const compositeCall = onfulfilled(
+            (this.outPathMap as unknown) as NormalTypeToStrictPathType<
+                UnpackPromise<ReturnType<T>>
+            >
+        );
         this.sequence.push(...compositeCall.getSequence());
         return (this as unknown) as CompositeCall<T, [...S, ...K]>;
     };

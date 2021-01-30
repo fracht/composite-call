@@ -1,8 +1,8 @@
 import { Expression, TransformationContext, TypeChecker } from 'typescript';
 
+import { createDPOExpression } from './createDPOExpression';
 import type { ComposedFunctionData } from './getComposedFunctionData';
 import { parametersToRecord } from './parametersToRecord';
-import { typeToRecordObjectLiteralExpression } from './typeToRecordObjectLiteralExpression';
 import { Identifiers } from './typings';
 
 export const createComposeCallExpression = (
@@ -22,7 +22,7 @@ export const createComposeCallExpression = (
         [
             fun,
             parametersToRecord(parameters, funArguments, context.factory),
-            typeToRecordObjectLiteralExpression(
+            createDPOExpression(
                 returnType,
                 typeChecker,
                 context.factory,
