@@ -1,4 +1,4 @@
-import { PATH } from '../../src';
+import { PATH } from '../../src/lib/typings';
 import { getExpressionsFromCall } from '../../src/utils';
 
 describe('getExpressionsFromCall', () => {

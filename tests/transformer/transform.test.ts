@@ -1,5 +1,5 @@
 import { compose } from '../../dist';
-import { StringPath } from '../../dist/lib/primitiveValueTypes';
+import { StringPath } from '../../src/lib/primitiveValueTypes';
 
 describe('compose transformation', () => {
     it('should compose function', async () => {
@@ -79,7 +79,7 @@ describe('compose transformation', () => {
 
         const composed = compose(dummyInstance.testFn, 'hello', 'world');
 
-        composed.then(fn);
+        composed.then(fn as any);
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: '', // impossible to get name automatically

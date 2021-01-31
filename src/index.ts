@@ -30,5 +30,3 @@ export function compose<T extends AnyFunction>(
         );
     }
 }
-
-export * from './lib';
