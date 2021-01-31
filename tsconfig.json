@@ -2,7 +2,7 @@
     "compilerOptions": {
         "target": "es5",
         "module": "ES2015",
-        "declaration": true,
+        "declaration": false,
         "strict": true,
         "esModuleInterop": true,
         "lib": ["ES2015"],
