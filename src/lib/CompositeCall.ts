@@ -1,11 +1,9 @@
-import { prefixAllValues } from './prefixAllValues';
+import { pathMapBuilder } from './pathMapBuilder';
 import type {
     AnyFunction,
     CallInfo,
     CompositeCallSender,
     NormalTypeToStrictPathType,
-    PathMap,
-    TupleToRecord,
     UnpackPromise,
 } from './typings';
 
@@ -19,12 +17,12 @@ export class CompositeCall<
 
     public constructor(
         private readonly fun: T,
-        parameters: TupleToRecord<Parameters<T>>,
-        private readonly outPathMap: PathMap<UnpackPromise<ReturnType<T>>>
+        parameters: Parameters<T>,
+        parameterNames?: string[]
     ) {
         this.sequence.push({
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            parameters: prefixAllValues(parameters, fun.name) as any,
+            parameters,
+            parameterNames,
             name: fun.name,
         });
     }
@@ -34,11 +32,7 @@ export class CompositeCall<
             value: NormalTypeToStrictPathType<UnpackPromise<ReturnType<T>>>
         ) => CompositeCall<AnyFunction, K>
     ): CompositeCall<T, [...S, ...K]> => {
-        const compositeCall = onfulfilled(
-            (this.outPathMap as unknown) as NormalTypeToStrictPathType<
-                UnpackPromise<ReturnType<T>>
-            >
-        );
+        const compositeCall = onfulfilled(pathMapBuilder(this.fun.name));
         this.sequence.push(...compositeCall.getSequence());
         return (this as unknown) as CompositeCall<T, [...S, ...K]>;
     };

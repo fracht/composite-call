@@ -51,8 +51,7 @@ export const visitor = (
             identifiers,
             fun,
             otherArguments,
-            context,
-            typeChecker
+            context
         );
     }
 

@@ -1,4 +1,3 @@
-import { PATH } from '../../src';
 import { CompositeCall } from '../../src/utils';
 
 describe('CompositeCall', () => {
@@ -7,23 +6,14 @@ describe('CompositeCall', () => {
 
         const sender = jest.fn();
 
-        new CompositeCall(
-            fun,
-            ({ hello: 'hello' } as unknown) as Parameters<typeof fun>,
-            {
-                c: {
-                    [PATH]: 'c',
-                },
-            }
-        ).call(sender);
+        new CompositeCall(fun, ['hello'], ['hello']).call(sender);
 
         expect(sender).toBeCalledWith(
             [
                 {
                     name: 'fun',
-                    parameters: {
-                        hello: 'hello',
-                    },
+                    parameters: ['hello'],
+                    parameterNames: ['hello'],
                 },
             ],
             fun
