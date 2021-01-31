@@ -6,18 +6,15 @@ import {
     isPropertyDeclaration,
     isVariableDeclaration,
     Node,
-    Type,
     TypeChecker,
 } from 'typescript';
 
 import { unboxPropertyDeclaration } from './unboxPropertyDeclaration';
 
-export type ComposedFunctionData = [string[], Type];
-
 export const getComposedFunctionData = (
     fun: Node,
     typeChecker: TypeChecker
-): ComposedFunctionData | undefined => {
+): string[] | undefined => {
     fun = unboxPropertyDeclaration(fun);
     if (isIdentifier(fun)) {
         const declaration = typeChecker
@@ -34,10 +31,9 @@ export const getComposedFunctionData = (
             const initializer = declaration.initializer;
 
             if (initializer.type) {
-                return [
-                    initializer.parameters.map((param) => param.name.getText()),
-                    typeChecker.getTypeFromTypeNode(initializer.type),
-                ];
+                return initializer.parameters.map((param) =>
+                    param.name.getText()
+                );
             }
         }
 
@@ -51,10 +47,7 @@ export const getComposedFunctionData = (
             );
 
             if (signature) {
-                return [
-                    signature.parameters.map((param) => param.getName()),
-                    signature.getReturnType(),
-                ];
+                return signature.parameters.map((param) => param.getName());
             }
         }
     }

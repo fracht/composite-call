@@ -5,19 +5,13 @@ export type TransformerConfig = {
     composeFunctionPath: string;
     declarationName: string;
     composeFunctionName: string;
-    pathSymbolName: string;
     modulePath: string;
-    arrayItemSymbolName: string;
-    arrayItemIndexPath: string;
 };
 
 export const config: TransformerConfig = {
     declarationsPath: path.join(__dirname, 'index.d.ts'),
     composeFunctionPath: path.join(__dirname, 'index.js'),
     declarationName: 'compose',
-    composeFunctionName: '__compose',
+    composeFunctionName: 'compose',
     modulePath: 'composite-call',
-    pathSymbolName: 'PATH',
-    arrayItemSymbolName: 'ARRAY_ITEM',
-    arrayItemIndexPath: '[__compositeCallArrayIndex]',
 };

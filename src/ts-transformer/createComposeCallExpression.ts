@@ -1,17 +1,13 @@
-import { Expression, TransformationContext, TypeChecker } from 'typescript';
+import { Expression, TransformationContext } from 'typescript';
 
-import { createDPOExpression } from './createDPOExpression';
-import type { ComposedFunctionData } from './getComposedFunctionData';
-import { parametersToRecord } from './parametersToRecord';
 import { Identifiers } from './typings';
 
 export const createComposeCallExpression = (
-    [parameters, returnType]: ComposedFunctionData,
+    parameterNames: string[],
     identifiers: Identifiers,
     fun: Expression,
     funArguments: Expression[],
-    context: TransformationContext,
-    typeChecker: TypeChecker
+    context: TransformationContext
 ) =>
     context.factory.createCallExpression(
         context.factory.createPropertyAccessExpression(
@@ -20,13 +16,12 @@ export const createComposeCallExpression = (
         ),
         undefined,
         [
-            fun,
-            parametersToRecord(parameters, funArguments, context.factory),
-            createDPOExpression(
-                returnType,
-                typeChecker,
-                context.factory,
-                identifiers
+            context.factory.createArrayLiteralExpression(
+                parameterNames.map((parameter) =>
+                    context.factory.createStringLiteral(parameter)
+                )
             ),
+            fun,
+            ...funArguments,
         ]
     );
