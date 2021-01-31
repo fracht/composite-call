@@ -13,10 +13,6 @@ export const PATH = Symbol.for('composite-call-path');
 
 export type UnpackPromise<T> = T extends Promise<infer U> ? U : T;
 
-export type InnerPath = {
-    [PATH]: string;
-};
-
 export type CompositeCallSender = <T extends Array<AnyFunction>>(
     sequence: Array<CallInfo<AnyFunction>>,
     mainFun: AnyFunction
@@ -34,16 +30,6 @@ export type CallInfo<T extends AnyFunction> = {
     name: string;
     parameters: Parameters<T>;
     parameterNames?: string[];
-};
-
-export type PathArr<T extends Array<unknown>> = PathMap<T[0]> & InnerPath;
-
-export type PathMap<T> = {
-    [K in keyof T]: T[K] extends object
-        ? T[K] extends Array<unknown>
-            ? PathArr<T[K]>
-            : PathMap<T> & InnerPath
-        : InnerPath;
 };
 
 export type ValueToPath<T> = T extends boolean
