@@ -1,4 +1,5 @@
-import { compose, rename } from '../../dist';
+import { compose } from '../../dist';
+import { rename } from '../../src';
 
 describe('renameDecorator', () => {
     it('should rename class method', async () => {

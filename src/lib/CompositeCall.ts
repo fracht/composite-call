@@ -3,6 +3,7 @@ import type {
     AnyFunction,
     CallInfo,
     CompositeCallSender,
+    NormalTypeToPathType,
     NormalTypeToStrictPathType,
     UnpackPromise,
 } from './typings';
@@ -17,7 +18,7 @@ export class CompositeCall<
 
     public constructor(
         private readonly fun: T,
-        parameters: Parameters<T>,
+        parameters: NormalTypeToPathType<Parameters<T>>,
         parameterNames?: string[]
     ) {
         this.sequence.push({
