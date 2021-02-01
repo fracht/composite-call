@@ -7,11 +7,11 @@
         "dist/**/*"
     ],
     "scripts": {
-        "test:coverage": "npm run build && npm run test -- --silent --ci --coverage --coverageReporters=\"text\" --coverageReporters=\"text-summary\"",
-        "test:watch": "npm run test -- --watch",
+        "test:coverage": "npm run build && npm test -- --silent --ci --coverage --coverageReporters=\"text\" --coverageReporters=\"text-summary\"",
         "test": "jest",
         "build": "node ./scripts/build.js",
-        "lint": "eslint ."
+        "lint": "eslint .",
+        "lint:ci": "eslint --max-warnings 0 ."
     },
     "keywords": [],
     "author": "Artiom Tretjakovas",

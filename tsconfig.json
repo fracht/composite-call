@@ -8,7 +8,6 @@
         "lib": ["ES2015"],
         "rootDir": "src",
         "skipLibCheck": true,
-        "experimentalDecorators": true,
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node"
     },
