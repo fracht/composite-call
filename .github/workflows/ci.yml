@@ -27,11 +27,11 @@ jobs:
             - name: Install deps and build (with cache)
               uses: bahmutov/npm-install@v1
 
-            - name: Test
-              run: npm test -- --ci --maxWorkers=2
-
             - name: Build
               run: npm run build
+
+            - name: Test
+              run: npm test -- --ci --maxWorkers=2
     lint:
         name: Lint project
         runs-on: ubuntu-latest
