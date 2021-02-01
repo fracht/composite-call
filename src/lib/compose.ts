@@ -18,15 +18,11 @@ export function compose<T extends AnyFunction>(
     ...otherArgs: NormalTypeToPathType<Parameters<T>>
 ) {
     if (typeof funOrNames === 'function') {
-        return new CompositeCall(funOrNames, ([
+        return new CompositeCall(funOrNames, [
             funOrType,
             ...otherArgs,
-        ] as unknown) as Parameters<T>);
+        ] as NormalTypeToPathType<Parameters<T>>);
     } else {
-        return new CompositeCall(
-            funOrType,
-            otherArgs as Parameters<T>,
-            funOrNames
-        );
+        return new CompositeCall(funOrType, otherArgs, funOrNames);
     }
 }

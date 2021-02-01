@@ -26,4 +26,7 @@ describe('pathMapBuilder', () => {
             (pathMapBuilder('initialPath') as any)[0][1][111111].b[PATH]
         ).toBe('initialPath.0.1.111111.b');
     });
+    it('should contain only PATH property', () => {
+        expect(PATH in (pathMapBuilder() as any).hello).toBeTruthy();
+    });
 });
