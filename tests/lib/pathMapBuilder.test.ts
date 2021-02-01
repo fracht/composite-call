@@ -1,5 +1,5 @@
+import { PATH } from '../../src';
 import { pathMapBuilder } from '../../src/lib/pathMapBuilder';
-import { PATH } from '../../src/lib/typings';
 
 describe('pathMapBuilder', () => {
     it('should build paths (without initial path)', () => {

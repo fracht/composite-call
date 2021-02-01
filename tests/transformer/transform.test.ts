@@ -1,5 +1,5 @@
 import { compose } from '../../dist';
-import { StringPath } from '../../src/lib/primitiveValueTypes';
+import { StringPath } from '../../src';
 
 describe('compose transformation', () => {
     it('should compose function', async () => {

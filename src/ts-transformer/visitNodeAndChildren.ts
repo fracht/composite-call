@@ -15,7 +15,7 @@ export type NodeVisitor = (
     context: TransformationContext,
     identifiers: Identifiers,
     config: TransformerConfig
-) => Node | undefined;
+) => Node | Node[] | undefined;
 
 export function visitNodeAndChildren(
     file: SourceFile,
@@ -33,7 +33,7 @@ export function visitNodeAndChildren(
     identifiers: Identifiers,
     nodeVisitor: NodeVisitor,
     config: TransformerConfig
-): Node | undefined;
+): Node | Node[] | undefined;
 
 export function visitNodeAndChildren(
     node: Node,
@@ -42,18 +42,36 @@ export function visitNodeAndChildren(
     identifiers: Identifiers,
     nodeVisitor: NodeVisitor,
     config: TransformerConfig
-): Node | undefined {
-    return visitEachChild(
-        nodeVisitor(node, program, context, identifiers, config),
-        (child) =>
-            visitNodeAndChildren(
-                child,
-                program,
-                context,
-                identifiers,
-                nodeVisitor,
-                config
-            ),
-        context
+): Node | Node[] | undefined {
+    const visitorResult = nodeVisitor(
+        node,
+        program,
+        context,
+        identifiers,
+        config
     );
+
+    const visit = (node: Node | undefined) =>
+        node &&
+        visitEachChild(
+            node,
+            (child) =>
+                visitNodeAndChildren(
+                    child,
+                    program,
+                    context,
+                    identifiers,
+                    nodeVisitor,
+                    config
+                ),
+            context
+        );
+
+    if (!Array.isArray(visitorResult)) {
+        return visit(visitorResult);
+    } else {
+        return visitorResult
+            .map((node) => visit(node))
+            .filter((value) => value !== undefined) as Node[];
+    }
 }

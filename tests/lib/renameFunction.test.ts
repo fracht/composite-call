@@ -1,5 +1,5 @@
 import { compose } from '../../dist';
-import { renameFunction } from '../../src/utils';
+import { renameFunction } from '../../src';
 
 describe('renameFunction', () => {
     it('should rename standard function', async () => {
