@@ -34,7 +34,7 @@ function getProgressBar(chunks) {
 }
 
 function main(config) {
-    logStep(1, 'Deleting folder');
+    logStep(1, `Deleting folder ${chalk.cyan(config.output)}`);
 
     rimraf.sync(config.output);
 

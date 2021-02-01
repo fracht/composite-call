@@ -13,7 +13,7 @@ export const visitor = (
     context: TransformationContext,
     identifiers: Identifiers,
     config: TransformerConfig
-): Node | undefined => {
+): Node | Node[] | undefined => {
     if (!node) return node;
 
     const { libName } = identifiers;
@@ -34,7 +34,7 @@ export const visitor = (
             ),
         ]);
 
-        return importNode;
+        return [node, importNode];
     }
 
     if (!isComposeCallExpression(node, typeChecker, config)) {

@@ -1,4 +1,4 @@
-import { CompositeCall } from '../../src/utils';
+import { CompositeCall } from '../../src';
 
 describe('CompositeCall', () => {
     it('should use custom caller', () => {
