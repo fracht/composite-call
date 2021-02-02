@@ -17,18 +17,29 @@ function logStep(index, description) {
     console.log(chalk.blue(`\nStep ${index}: `) + description);
 }
 
-function getProgressBar(chunks) {
+function printEntrypoints(entrypoints, output, getOutputPath) {
+    console.log();
+
+    entrypoints.forEach(({ input }) => {
+        console.log(
+            `${chalk.cyan(input)} → ${chalk.green(
+                getOutputPath(input, output)
+            )}`
+        );
+    });
+
+    console.log();
+}
+
+function getProgressBar(fileCount) {
     const progress = new cliProgress.SingleBar({
-        format:
-            '|' +
-            chalk.cyan('{bar}') +
-            '| {percentage}% | {value}/{total} Files',
+        format: `|${chalk.cyan('{bar}')}| {value}/{total} Files`,
         barCompleteChar: '\u2588',
         barIncompleteChar: '\u2591',
         hideCursor: true,
     });
 
-    progress.start(chunks, 0);
+    progress.start(fileCount, 0);
 
     return progress;
 }
@@ -40,17 +51,7 @@ function main(config) {
 
     logStep(2, 'Generating JavaScript bundle');
 
-    console.log();
-
-    config.entrypoints.forEach(({ input }) => {
-        console.log(
-            `${chalk.cyan(input)} → ${chalk.green(
-                getJSBundleOutPath(input, config.output)
-            )}`
-        );
-    });
-
-    console.log();
+    printEntrypoints(config.entrypoints, config.output, getJSBundleOutPath);
 
     const progress = getProgressBar(config.entrypoints.length);
 
@@ -61,17 +62,11 @@ function main(config) {
 
         logStep(3, 'Generating TypeScript declarations');
 
-        console.log();
-
-        config.entrypoints.forEach(({ input }) => {
-            console.log(
-                `${chalk.cyan(input)} → ${chalk.green(
-                    getDeclarationsOutPath(input, config.output)
-                )}`
-            );
-        });
-
-        console.log();
+        printEntrypoints(
+            config.entrypoints,
+            config.output,
+            getDeclarationsOutPath
+        );
 
         progress.start(config.entrypoints.length);
 
