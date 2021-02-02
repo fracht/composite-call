@@ -42,7 +42,7 @@ describe('CompositeCall', () => {
             parameters: ['asdf'],
             parameterNames: ['a'],
         });
-        expect(sequence[1].parameters[0][PATH]).toBe('hello.a');
+        expect(sequence[1].parameters[0][PATH]).toStrictEqual(['hello', 'a']);
     });
     it('should use custom caller', () => {
         const fun = (hello: string): { c: string } => ({ c: hello });
