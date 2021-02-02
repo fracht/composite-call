@@ -1,5 +1,4 @@
-import { PATH } from '../../dist';
-import { CompositeCall } from '../../src';
+import { CompositeCall, PATH_IDENTIFIER } from '../../src';
 
 describe('CompositeCall', () => {
     it('should get sequence', () => {
@@ -42,7 +41,10 @@ describe('CompositeCall', () => {
             parameters: ['asdf'],
             parameterNames: ['a'],
         });
-        expect(sequence[1].parameters[0][PATH]).toStrictEqual(['hello', 'a']);
+        expect(sequence[1].parameters[0][PATH_IDENTIFIER]).toStrictEqual([
+            'hello',
+            'a',
+        ]);
     });
     it('should use custom caller', () => {
         const fun = (hello: string): { c: string } => ({ c: hello });

@@ -1,4 +1,4 @@
-import { getExpressionsFromCall, PATH } from '../../src';
+import { getExpressionsFromCall, PATH_IDENTIFIER } from '../../src';
 
 describe('getExpressionsFromCall', () => {
     it('should get expressions from call', () => {
@@ -8,14 +8,40 @@ describe('getExpressionsFromCall', () => {
                     c: {
                         d: {
                             e: {
-                                [PATH]: ['hello', 'c', 'd', 'e'],
+                                [PATH_IDENTIFIER]: ['hello', 'g', 'g', 'd'],
                             },
                         },
                     },
                 } as any,
                 name: 'hello',
             })
-        ).toStrictEqual([['hello', 'c', 'd', 'e']]);
+        ).toStrictEqual([
+            {
+                parameterPath: ['c', 'd', 'e'],
+                sourcePath: ['hello', 'g', 'g', 'd'],
+            },
+        ]);
+        expect(
+            getExpressionsFromCall({
+                parameters: [
+                    {
+                        c: {
+                            d: {
+                                e: {
+                                    [PATH_IDENTIFIER]: ['hello', 'g', 'g', 'd'],
+                                },
+                            },
+                        },
+                    },
+                ],
+                name: 'hello',
+            })
+        ).toStrictEqual([
+            {
+                parameterPath: ['0', 'c', 'd', 'e'],
+                sourcePath: ['hello', 'g', 'g', 'd'],
+            },
+        ]);
     });
     it('should get multiple expressions from call', () => {
         expect(
@@ -24,7 +50,7 @@ describe('getExpressionsFromCall', () => {
                     c: {
                         d: {
                             e: {
-                                [PATH]: ['hello', 'c', 'd', 'e'],
+                                [PATH_IDENTIFIER]: ['hello', 'a', 'a', 'a'],
                             },
                         },
                     },
@@ -32,7 +58,7 @@ describe('getExpressionsFromCall', () => {
                         arr: [
                             {
                                 d: {
-                                    [PATH]: ['hello', 'e', 'arr', 'd'],
+                                    [PATH_IDENTIFIER]: ['hello', 'D', 'e', 'f'],
                                 },
                             },
                         ],
@@ -41,8 +67,14 @@ describe('getExpressionsFromCall', () => {
                 name: 'hello',
             })
         ).toStrictEqual([
-            ['hello', 'c', 'd', 'e'],
-            ['hello', 'e', 'arr', 'd'],
+            {
+                parameterPath: ['c', 'd', 'e'],
+                sourcePath: ['hello', 'a', 'a', 'a'],
+            },
+            {
+                parameterPath: ['e', 'arr', '0', 'd'],
+                sourcePath: ['hello', 'D', 'e', 'f'],
+            },
         ]);
     });
 });

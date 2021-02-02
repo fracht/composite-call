@@ -1,4 +1,8 @@
-import { NormalTypeToStrictPathType, PATH, UnpackPromise } from './typings';
+import {
+    NormalTypeToStrictPathType,
+    PATH_IDENTIFIER,
+    UnpackPromise,
+} from './typings';
 
 export const pathMapBuilder = <T>(
     path: string | symbol | number | (string | symbol | number)[] = []
@@ -9,13 +13,13 @@ export const pathMapBuilder = <T>(
         {},
         {
             get: (_, innerPath) => {
-                if (innerPath === PATH) {
+                if (innerPath === PATH_IDENTIFIER) {
                     return normalPath;
                 } else {
                     return pathMapBuilder([...normalPath, innerPath]);
                 }
             },
-            has: (_, innerPath) => innerPath === PATH,
+            has: (_, innerPath) => innerPath === PATH_IDENTIFIER,
         }
     ) as NormalTypeToStrictPathType<UnpackPromise<T>>;
 };
