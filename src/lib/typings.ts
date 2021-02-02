@@ -13,7 +13,7 @@ export type SymbolPath = typeof SymbolBrand;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type AnyFunction = (...args: any[]) => any;
 
-export const PATH = Symbol.for('composite-call-path');
+export const PATH_IDENTIFIER = Symbol.for('composite-call-path');
 
 export type UnpackPromise<T> = T extends Promise<infer U> ? U : T;
 
@@ -29,6 +29,8 @@ export type CompositeCallSender = <T extends Array<AnyFunction>>(
         }
     ]
 >;
+
+export type Path = (string | symbol | number)[];
 
 export type CallInfo<T extends AnyFunction> = {
     name: string;

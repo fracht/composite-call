@@ -1,27 +1,44 @@
-import get from 'lodash/get';
+import type { AnyFunction, CallInfo, Path } from './typings';
+import { PATH_IDENTIFIER } from './typings';
 
-import type { AnyFunction, CallInfo } from './typings';
-import { PATH } from './typings';
+type QueueMember = {
+    path: Path;
+    obj: unknown;
+};
+
+export type ParameterExpression = {
+    parameterPath: Path;
+    sourcePath: Path;
+};
 
 export const getExpressionsFromCall = ({
     parameters,
-}: CallInfo<AnyFunction>): string[][] => {
-    const queue = [...Object.keys(parameters)];
+}: CallInfo<AnyFunction>): ParameterExpression[] => {
+    const expr: ParameterExpression[] = [];
 
-    const preExpr: string[][] = [];
+    const queue: QueueMember[] = [{ path: [], obj: parameters }];
 
     while (queue.length > 0) {
-        const path = queue.shift()!;
-        const arg = get(parameters, path);
-        if (arg && arg[PATH]) {
-            preExpr.push(arg[PATH]);
-        } else if (typeof arg === 'object' && arg !== null) {
-            const newKeys = Object.keys(arg);
-            if (newKeys.length > 0) {
-                queue.push(...newKeys.map((key) => `${path}.${key}`));
+        const { path, obj } = queue.shift()!;
+
+        if (typeof obj === 'object' && obj !== null) {
+            if (PATH_IDENTIFIER in obj) {
+                expr.push({
+                    parameterPath: path,
+                    sourcePath: (obj as { [PATH_IDENTIFIER]: Path })[
+                        PATH_IDENTIFIER
+                    ],
+                });
+            } else {
+                queue.push(
+                    ...Object.keys(obj).map((innerPath) => ({
+                        path: [...path, innerPath],
+                        obj: (obj as Record<string, unknown>)[innerPath],
+                    }))
+                );
             }
         }
     }
 
-    return preExpr;
+    return expr;
 };
