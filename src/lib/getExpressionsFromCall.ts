@@ -5,10 +5,10 @@ import { PATH } from './typings';
 
 export const getExpressionsFromCall = ({
     parameters,
-}: CallInfo<AnyFunction>): string[] => {
+}: CallInfo<AnyFunction>): string[][] => {
     const queue = [...Object.keys(parameters)];
 
-    const preExpr: string[] = [];
+    const preExpr: string[][] = [];
 
     while (queue.length > 0) {
         const path = queue.shift()!;
