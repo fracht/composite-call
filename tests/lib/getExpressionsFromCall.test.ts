@@ -8,14 +8,14 @@ describe('getExpressionsFromCall', () => {
                     c: {
                         d: {
                             e: {
-                                [PATH]: 'hello.c.d.e',
+                                [PATH]: ['hello', 'c', 'd', 'e'],
                             },
                         },
                     },
                 } as any,
                 name: 'hello',
             })
-        ).toStrictEqual(['hello.c.d.e']);
+        ).toStrictEqual([['hello', 'c', 'd', 'e']]);
     });
     it('should get multiple expressions from call', () => {
         expect(
@@ -24,7 +24,7 @@ describe('getExpressionsFromCall', () => {
                     c: {
                         d: {
                             e: {
-                                [PATH]: 'hello.c.d.e',
+                                [PATH]: ['hello', 'c', 'd', 'e'],
                             },
                         },
                     },
@@ -32,7 +32,7 @@ describe('getExpressionsFromCall', () => {
                         arr: [
                             {
                                 d: {
-                                    [PATH]: 'hello.e.arr.d',
+                                    [PATH]: ['hello', 'e', 'arr', 'd'],
                                 },
                             },
                         ],
@@ -40,6 +40,9 @@ describe('getExpressionsFromCall', () => {
                 } as any,
                 name: 'hello',
             })
-        ).toStrictEqual(['hello.c.d.e', 'hello.e.arr.d']);
+        ).toStrictEqual([
+            ['hello', 'c', 'd', 'e'],
+            ['hello', 'e', 'arr', 'd'],
+        ]);
     });
 });
