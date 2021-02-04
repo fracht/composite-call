@@ -76,10 +76,20 @@ const defaultSequences = [
 ] as Array<Array<CallInfo<AnyFunction>>>;
 
 describe('prepareSequence', () => {
+    it('should throw error if sequence members have same names and indexes', () => {
+        expect(() =>
+            prepareSequence([
+                { parameters: [], name: 'hello', index: 0 },
+                { parameters: [], name: 'hello', index: 0 },
+            ])
+        ).toThrow();
+    });
     it('should return identical sequence', () => {
         defaultSequences.forEach((seq) => {
             const prepared = prepareSequence(seq);
+            // should contain same values.
             expect(prepared).toStrictEqual(seq);
+            // but not be the same object.
             expect(prepared).not.toBe(seq);
         });
     });

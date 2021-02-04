@@ -11,8 +11,8 @@ export const prepareSequence = (
 
         if (callInfo.name in indexMap) {
             if (indexMap[callInfo.name].includes(callInfo.index)) {
-                newCallInfo.index = indexMap[callInfo.name].indexOf(
-                    callInfo.index
+                throw new Error(
+                    'Two calls with same name and index found. This is probably a problem with CompositeCall build.'
                 );
             } else {
                 newCallInfo.index = indexMap[callInfo.name].length;

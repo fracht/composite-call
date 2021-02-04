@@ -11,8 +11,6 @@ export const pathMapBuilder = <T>(
     index: number,
     path: Path = []
 ): NormalTypeToStrictPathType<UnpackPromise<T>> => {
-    const normalPath =
-        Array.isArray(path) || path === undefined ? path : [path];
     return new Proxy(
         {},
         {
@@ -21,12 +19,9 @@ export const pathMapBuilder = <T>(
                 innerPath
             ): InnerPath | NormalTypeToStrictPathType<UnpackPromise<T>> => {
                 if (innerPath === PATH_IDENTIFIER) {
-                    return { path: normalPath, index, name };
+                    return { path: path, index, name };
                 } else {
-                    return pathMapBuilder(name, index, [
-                        ...normalPath,
-                        innerPath,
-                    ]);
+                    return pathMapBuilder(name, index, [...path, innerPath]);
                 }
             },
             has: (_, innerPath) => innerPath === PATH_IDENTIFIER,
