@@ -15,6 +15,7 @@ describe('renameFunction', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });
@@ -33,6 +34,7 @@ describe('renameFunction', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });
@@ -55,6 +57,7 @@ describe('renameFunction', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });
@@ -77,6 +80,7 @@ describe('renameFunction', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: functionName,
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });

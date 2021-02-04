@@ -16,6 +16,7 @@ describe('renameDecorator', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: 'DummyClass.testFn',
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });
@@ -34,6 +35,7 @@ describe('renameDecorator', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: "I'm custom name!!!",
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });
