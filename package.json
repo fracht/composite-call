@@ -1,7 +1,7 @@
 {
     "name": "composite-call",
-    "version": "1.0.0",
-    "description": "",
+    "version": "0.0.0",
+    "description": "Easily combine your API calls",
     "main": "dist/index.js",
     "files": [
         "dist/**/*"
@@ -11,9 +11,18 @@
         "test": "jest",
         "build": "node ./scripts/build.js",
         "lint": "eslint .",
-        "lint:ci": "eslint --max-warnings 0 ."
+        "lint:ci": "eslint --max-warnings 0 .",
+        "prepare": "npm run build",
+        "release": "np"
     },
-    "keywords": [],
+    "keywords": [
+        "composite-call",
+        "composite",
+        "api",
+        "promise",
+        "http",
+        "multiple"
+    ],
     "author": "Artiom Tretjakovas",
     "license": "MIT",
     "devDependencies": {
@@ -30,6 +39,7 @@
         "eslint-plugin-prettier": "^3.3.1",
         "eslint-plugin-simple-import-sort": "^7.0.0",
         "jest": "^26.6.3",
+        "np": "^7.2.0",
         "prettier": "^2.2.1",
         "rimraf": "^3.0.2",
         "rollup": "^2.37.1",
