@@ -8,17 +8,28 @@ describe('getExpressionsFromCall', () => {
                     c: {
                         d: {
                             e: {
-                                [PATH_IDENTIFIER]: ['hello', 'g', 'g', 'd'],
+                                [PATH_IDENTIFIER]: {
+                                    name: 'hello',
+                                    index: 0,
+                                    path: ['hello', 'g', 'g', 'd'],
+                                },
                             },
+                            d: 'asdf',
+                            g: null,
                         },
                     },
                 } as any,
+                index: 0,
                 name: 'hello',
             })
         ).toStrictEqual([
             {
+                sourcePath: {
+                    name: 'hello',
+                    index: 0,
+                    path: ['hello', 'g', 'g', 'd'],
+                },
                 parameterPath: ['c', 'd', 'e'],
-                sourcePath: ['hello', 'g', 'g', 'd'],
             },
         ]);
         expect(
@@ -27,19 +38,32 @@ describe('getExpressionsFromCall', () => {
                     {
                         c: {
                             d: {
+                                str: [
+                                    [],
+                                    [[[], null], 0, [['asdf', new Date()]]],
+                                ],
                                 e: {
-                                    [PATH_IDENTIFIER]: ['hello', 'g', 'g', 'd'],
+                                    [PATH_IDENTIFIER]: {
+                                        path: ['hello', 'g', 'g', 'd'],
+                                        name: 'basdf',
+                                        index: 0,
+                                    },
                                 },
                             },
                         },
                     },
                 ],
+                index: 0,
                 name: 'hello',
             })
         ).toStrictEqual([
             {
+                sourcePath: {
+                    path: ['hello', 'g', 'g', 'd'],
+                    name: 'basdf',
+                    index: 0,
+                },
                 parameterPath: ['0', 'c', 'd', 'e'],
-                sourcePath: ['hello', 'g', 'g', 'd'],
             },
         ]);
     });
@@ -50,30 +74,49 @@ describe('getExpressionsFromCall', () => {
                     c: {
                         d: {
                             e: {
-                                [PATH_IDENTIFIER]: ['hello', 'a', 'a', 'a'],
+                                [PATH_IDENTIFIER]: {
+                                    name: 'b',
+                                    index: 1,
+                                    path: ['hello', 'a', 'a', 'a'],
+                                },
                             },
                         },
                     },
                     e: {
                         arr: [
+                            null,
+                            'asdf',
                             {
                                 d: {
-                                    [PATH_IDENTIFIER]: ['hello', 'D', 'e', 'f'],
+                                    [PATH_IDENTIFIER]: {
+                                        name: 'c',
+                                        index: 2,
+                                        path: ['hello', 'D', 'e', 'f'],
+                                    },
                                 },
                             },
                         ],
                     },
                 } as any,
                 name: 'hello',
+                index: 0,
             })
         ).toStrictEqual([
             {
+                sourcePath: {
+                    name: 'b',
+                    index: 1,
+                    path: ['hello', 'a', 'a', 'a'],
+                },
                 parameterPath: ['c', 'd', 'e'],
-                sourcePath: ['hello', 'a', 'a', 'a'],
             },
             {
-                parameterPath: ['e', 'arr', '0', 'd'],
-                sourcePath: ['hello', 'D', 'e', 'f'],
+                sourcePath: {
+                    name: 'c',
+                    index: 2,
+                    path: ['hello', 'D', 'e', 'f'],
+                },
+                parameterPath: ['e', 'arr', '2', 'd'],
             },
         ]);
     });

@@ -32,8 +32,15 @@ export type CompositeCallSender = <T extends Array<AnyFunction>>(
 
 export type Path = (string | symbol | number)[];
 
+export type InnerPath = {
+    index: number;
+    name: string;
+    path: Path;
+};
+
 export type CallInfo<T extends AnyFunction> = {
     name: string;
+    index: number;
     parameters: Parameters<T>;
     parameterNames?: string[];
 };

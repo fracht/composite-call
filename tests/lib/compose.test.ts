@@ -8,6 +8,7 @@ describe('compose', () => {
             }).getSequence()
         ).toStrictEqual([
             {
+                index: expect.any(Number),
                 name: 'fun',
                 parameters: [],
                 parameterNames: undefined,
@@ -19,6 +20,7 @@ describe('compose', () => {
             }, 0).getSequence()
         ).toStrictEqual([
             {
+                index: expect.any(Number),
                 name: 'fun',
                 parameters: [0],
                 parameterNames: undefined,
@@ -32,6 +34,7 @@ describe('compose', () => {
             }).getSequence()
         ).toStrictEqual([
             {
+                index: expect.any(Number),
                 name: 'fun',
                 parameters: [],
                 parameterNames: [],
@@ -47,6 +50,7 @@ describe('compose', () => {
             ).getSequence()
         ).toStrictEqual([
             {
+                index: expect.any(Number),
                 name: 'fun',
                 parameters: [0],
                 parameterNames: ['arg1'],

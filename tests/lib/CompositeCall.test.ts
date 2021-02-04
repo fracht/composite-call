@@ -13,6 +13,7 @@ describe('CompositeCall', () => {
         ).toStrictEqual([
             {
                 name: 'hello',
+                index: 0,
                 parameters: ['asdf'],
                 parameterNames: ['a'],
             },
@@ -38,13 +39,19 @@ describe('CompositeCall', () => {
 
         expect(sequence[0]).toStrictEqual({
             name: 'hello',
+            index: expect.any(Number),
             parameters: ['asdf'],
             parameterNames: ['a'],
         });
-        expect(sequence[1].parameters[0][PATH_IDENTIFIER]).toStrictEqual([
-            'hello',
-            'a',
-        ]);
+        expect(sequence[1].parameters[0][PATH_IDENTIFIER]).toStrictEqual({
+            index: expect.any(Number),
+            name: 'hello',
+            path: ['a'],
+        });
+        expect(
+            sequence[0].index ===
+                sequence[1].parameters[0][PATH_IDENTIFIER].index
+        ).toBeTruthy();
     });
     it('should use custom caller', () => {
         const fun = (hello: string): { c: string } => ({ c: hello });
@@ -57,6 +64,7 @@ describe('CompositeCall', () => {
             [
                 {
                     name: 'fun',
+                    index: 0,
                     parameters: ['hello'],
                     parameterNames: ['hello'],
                 },
@@ -77,6 +85,7 @@ describe('CompositeCall', () => {
             [
                 {
                     name: 'fun',
+                    index: 0,
                     parameters: ['hello'],
                     parameterNames: ['hello'],
                 },

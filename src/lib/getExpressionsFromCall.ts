@@ -1,4 +1,4 @@
-import type { AnyFunction, CallInfo, Path } from './typings';
+import type { AnyFunction, CallInfo, InnerPath, Path } from './typings';
 import { PATH_IDENTIFIER } from './typings';
 
 type QueueMember = {
@@ -8,7 +8,7 @@ type QueueMember = {
 
 export type ParameterExpression = {
     parameterPath: Path;
-    sourcePath: Path;
+    sourcePath: InnerPath;
 };
 
 export const getExpressionsFromCall = ({
@@ -25,7 +25,7 @@ export const getExpressionsFromCall = ({
             if (PATH_IDENTIFIER in obj) {
                 expr.push({
                     parameterPath: path,
-                    sourcePath: (obj as { [PATH_IDENTIFIER]: Path })[
+                    sourcePath: (obj as { [PATH_IDENTIFIER]: InnerPath })[
                         PATH_IDENTIFIER
                     ],
                 });

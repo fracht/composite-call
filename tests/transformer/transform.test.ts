@@ -17,6 +17,7 @@ describe('compose transformation', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: 'testFn',
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });
@@ -36,6 +37,7 @@ describe('compose transformation', () => {
 
         expect(composed.getSequence()[0]).toStrictEqual({
             name: 'testFn',
+            index: expect.any(Number),
             parameterNames: ['a', 'b'],
             parameters: ['hello', 'world'],
         });
@@ -60,6 +62,7 @@ describe('compose transformation', () => {
         expect(composed.getSequence()[0]).toStrictEqual({
             name: '', // impossible to get name automatically
             parameterNames: ['a', 'b'],
+            index: expect.any(Number),
             parameters: ['hello', 'world'],
         });
     });
@@ -84,6 +87,7 @@ describe('compose transformation', () => {
         expect(composed.getSequence()[0]).toStrictEqual({
             name: '', // impossible to get name automatically
             parameterNames: ['a', 'b'],
+            index: expect.any(Number),
             parameters: ['hello', 'world'],
         });
     });
