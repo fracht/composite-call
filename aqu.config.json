@@ -14,5 +14,15 @@
             "platform": "node",
             "target": "node10.23.3"
         }
+    },
+    {
+        "input": "./src/transformer-utils.ts",
+        "format": "cjs",
+        "cjsMode": "development",
+        "outfile": "./dist/transformer-utils.js",
+        "buildOptions": {
+            "platform": "node",
+            "target": "node10.23.3"
+        }
     }
 ]
