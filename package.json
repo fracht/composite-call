@@ -29,16 +29,9 @@
     "author": "Artiom Tretjakovas",
     "license": "MIT",
     "devDependencies": {
-        "@types/lodash": "^4.14.167",
         "@types/node": "^14.14.20",
-        "@typescript-eslint/eslint-plugin": "^4.12.0",
-        "@typescript-eslint/parser": "^4.12.0",
         "aqu": "^0.1.0",
-        "chalk": "^4.1.0",
-        "cli-progress": "^3.9.0",
-        "dts-bundle-generator": "^5.6.0",
         "np": "^7.2.0",
-        "rimraf": "^3.0.2",
         "ttypescript": "^1.5.12",
         "typescript": "^4.1.3"
     },
