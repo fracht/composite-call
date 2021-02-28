@@ -1,6 +1,6 @@
 {
     "name": "composite-call",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Easily combine your API requests",
     "main": "./dist/index.js",
     "module": "./dist/composite-call.esm.js",
