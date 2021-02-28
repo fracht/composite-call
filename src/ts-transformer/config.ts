@@ -9,7 +9,7 @@ export type TransformerConfig = {
 };
 
 export const config: TransformerConfig = {
-    declarationsPath: path.join(__dirname, 'index.d.ts'),
+    declarationsPath: path.join(__dirname, 'composite-call.d.ts'),
     composeFunctionPath: path.join(__dirname, 'index.js'),
     declarationName: 'compose',
     composeFunctionName: 'compose',

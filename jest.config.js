@@ -1,10 +1,5 @@
 module.exports = {
     testEnvironment: 'node',
-    moduleFileExtensions: ['ts', 'js'],
-    transform: {
-        '\\.ts$': 'ts-jest',
-    },
-    testMatch: ['**/*.(test|spec).ts'],
     globals: {
         'ts-jest': {
             babelConfig: true,
@@ -16,6 +11,6 @@ module.exports = {
     coveragePathIgnorePatterns: ['/node_modules/'],
     watchman: true,
     moduleNameMapper: {
-        'composite-call': '../../dist/index.js',
+        '^composite-call$': '../../dist',
     },
 };

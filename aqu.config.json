@@ -1,0 +1,14 @@
+[
+    {
+        "input": "./src/index.ts"
+    },
+    {
+        "input": "./src/transformer.ts",
+        "format": "cjs",
+        "cjsMode": "development",
+        "outfile": "./dist/transformer.js",
+        "buildOptions": {
+            "platform": "node"
+        }
+    }
+]
