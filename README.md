@@ -88,3 +88,5 @@ module.exports = {
 ## License
 
 MIT © [ArtiomTr](https://github.com/ArtiomTr)
+
+[Created with aqu 🌊](https://github.com/ArtiomTr/aqu#readme)

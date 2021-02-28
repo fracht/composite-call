@@ -1,4 +1,4 @@
-import { compose } from '../../dist';
+import { compose } from '../..';
 import { StringPath } from '../../src';
 
 describe('compose transformation', () => {

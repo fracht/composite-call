@@ -1,4 +1,4 @@
-import { compose } from '../../dist';
+import { compose } from '../..';
 import { renameFunction } from '../../src';
 
 describe('renameFunction', () => {
