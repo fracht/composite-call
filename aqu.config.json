@@ -1,6 +1,9 @@
 [
     {
-        "input": "./src/index.ts"
+        "input": "./src/index.ts",
+        "buildOptions": {
+            "target": "es2015"
+        }
     },
     {
         "input": "./src/transformer.ts",
