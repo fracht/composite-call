@@ -8,7 +8,8 @@
         "cjsMode": "development",
         "outfile": "./dist/transformer.js",
         "buildOptions": {
-            "platform": "node"
+            "platform": "node",
+            "target": "node10.23.3"
         }
     }
 ]
