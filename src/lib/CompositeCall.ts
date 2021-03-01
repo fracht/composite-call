@@ -16,11 +16,11 @@ export class CompositeCall<
 > {
     static sendRequest: CompositeCallSender;
 
-    private readonly index: number;
-    private sequence: Array<CallInfo<AnyFunction>> = [];
+    protected readonly index: number;
+    protected sequence: Array<CallInfo<AnyFunction>> = [];
 
     public constructor(
-        private readonly fun: T,
+        protected readonly fun: T,
         parameters: NormalTypeToPathType<Parameters<T>>,
         parameterNames?: string[]
     ) {
@@ -34,14 +34,22 @@ export class CompositeCall<
         });
     }
 
+    protected fulfill = <K extends Array<AnyFunction>>(
+        onfulfilled: (
+            value: NormalTypeToStrictPathType<UnpackPromise<ReturnType<T>>>
+        ) => CompositeCall<AnyFunction, K>
+    ): CompositeCall<AnyFunction, K> => {
+        return onfulfilled(pathMapBuilder(this.fun.name, this.index));
+    };
+
+    protected getPreparedSequence = () => prepareSequence(this.sequence);
+
     public then = <K extends Array<AnyFunction>>(
         onfulfilled: (
             value: NormalTypeToStrictPathType<UnpackPromise<ReturnType<T>>>
         ) => CompositeCall<AnyFunction, K>
     ): CompositeCall<T, [...S, ...K]> => {
-        const compositeCall = onfulfilled(
-            pathMapBuilder(this.fun.name, this.index)
-        );
+        const compositeCall = this.fulfill(onfulfilled);
         this.sequence.push(...compositeCall.getSequence());
         return (this as unknown) as CompositeCall<T, [...S, ...K]>;
     };
@@ -51,6 +59,6 @@ export class CompositeCall<
     };
 
     public call = (sendRequest = CompositeCall.sendRequest) => {
-        return sendRequest<S>(prepareSequence(this.sequence), this.fun);
+        return sendRequest<S>(this.getPreparedSequence(), this.fun);
     };
 }
